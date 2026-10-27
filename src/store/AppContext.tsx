@@ -102,7 +102,7 @@ export function AppProvider({
   const anunciar = useCallback<EstadoApp['anunciar']>(
     async (dados) => {
       if (!usuario) throw new Error('Entre na sua conta para anunciar.');
-      const item = await repo.criarItem({ ...dados, donoId: usuario.id, campus: usuario.campus });
+      const item = await repo.criarItem({ ...dados, donoId: usuario.id, campus: usuario.campus } as any);
       setItens((atual) => [item, ...atual]);
       return item;
     },

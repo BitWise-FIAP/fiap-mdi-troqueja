@@ -124,7 +124,7 @@ export function criarRepositorioSupabase(url: string, chave: string): Repositori
     },
 
     async criarItem(dados: NovoItem) {
-      const linha = {
+      const linha: any = {
         dono_id: dados.donoId,
         titulo: dados.titulo,
         descricao: dados.descricao,
@@ -134,6 +134,7 @@ export function criarRepositorioSupabase(url: string, chave: string): Repositori
         aceita_em_troca: dados.aceitaEmTroca,
         cor: dados.cor,
         campus: dados.campus,
+        imagem: (dados as Item).imagem ?? null,
       };
       const { data, error } = await db.from('itens').insert(linha).select().single();
       if (error || !data) falhar('criar item', error);

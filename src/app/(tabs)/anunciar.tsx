@@ -1,12 +1,13 @@
 import { router } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Botao } from '@/components/Botao';
 import { Campo } from '@/components/Campo';
 import { Chip } from '@/components/Chip';
 import { Txt } from '@/components/Txt';
 import { useApp } from '@/store/AppContext';
-import { cores, espaco } from '@/theme/tokens';
+import { cores, espaco, raio } from '@/theme/tokens';
 import { categorias, condicoes, coresDeItem } from '@/utils/catalogo';
 import { semErros, validarAnuncio, type ErrosAnuncio, type FormAnuncio } from '@/utils/validacao';
 
@@ -25,11 +26,31 @@ export default function Anunciar() {
   const [erros, setErros] = useState<ErrosAnuncio>({});
   const [enviando, setEnviando] = useState(false);
   const [falha, setFalha] = useState<string | null>(null);
+  const [imagem, setImagem] = useState<string | null>(null);
 
   const definir = <K extends keyof FormAnuncio>(campo: K, valor: FormAnuncio[K]) => {
     setForm((f) => ({ ...f, [campo]: valor }));
-    // O erro some assim que a pessoa mexe no campo; volta a validar no próximo envio.
+    // O erro some assim que a pessoa mexe no campo; volta a validar no pr��ximo envio.
     setErros((e) => ({ ...e, [campo]: undefined }));
+  };
+
+  const escolherImagem = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permiss��o necess��ria', '�� preciso permitir acesso �� galeria para escolher uma imagem.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.7,
+    });
+
+    if (!result.canceled && result.assets[0]?.uri) {
+      setImagem(result.assets[0].uri);
+    }
   };
 
   async function publicar() {
@@ -47,11 +68,13 @@ export default function Anunciar() {
         modalidade: form.modalidade,
         aceitaEmTroca: form.modalidade === 'troca' ? form.aceitaEmTroca.trim() : '',
         cor: coresDeItem[Math.floor(Math.random() * coresDeItem.length)],
-      });
+        imagem: imagem || null,
+      } as any);
       setForm(vazio);
+      setImagem(null);
       router.push({ pathname: '/item/[id]', params: { id: item.id } });
     } catch (e) {
-      setFalha(e instanceof Error ? e.message : 'Não foi possível publicar o anúncio.');
+      setFalha(e instanceof Error ? e.message : 'Nǜo foi poss��vel publicar o anǧncio.');
     } finally {
       setEnviando(false);
     }
@@ -116,8 +139,18 @@ export default function Anunciar() {
           />
         )}
 
+        <View style={styles.grupo}>
+          <Txt variante="rotulo">Imagem</Txt>
+          <TouchableOpacity style={styles.botaoImagem} onPress={escolherImagem}>
+            <Txt variante="corpoForte" cor={cores.marcaTexto}>
+              {imagem ? 'Trocar imagem da galeria' : 'Escolher imagem da galeria'}
+            </Txt>
+          </TouchableOpacity>
+          {imagem ? <Image source={{ uri: imagem }} style={styles.preview} resizeMode="cover" /> : null}
+        </View>
+
         {falha && <Txt variante="pequeno" cor={cores.vermelhoErro}>{falha}</Txt>}
-        <Botao titulo="Publicar anúncio" onPress={publicar} carregando={enviando} testID="botao-publicar" />
+        <Botao titulo="Publicar anǧncio" onPress={publicar} carregando={enviando} testID="botao-publicar" />
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -129,4 +162,18 @@ const styles = StyleSheet.create({
   grupo: { gap: espaco.sm },
   linha: { flexDirection: 'row', gap: espaco.sm },
   linhaQuebra: { flexDirection: 'row', flexWrap: 'wrap', gap: espaco.sm },
+  botaoImagem: {
+    borderWidth: 1.5,
+    borderColor: cores.rosaMarcaTexto,
+    backgroundColor: cores.branco,
+    borderRadius: raio.campo,
+    padding: espaco.md,
+    alignItems: 'center',
+  },
+  preview: {
+    width: '100%',
+    height: 180,
+    borderRadius: raio.campo,
+    backgroundColor: cores.linha,
+  },
 });

@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import itensJson from '@/data/mock/itens.json';
 import propostasJson from '@/data/mock/propostas.json';
 import usuariosJson from '@/data/mock/usuarios.json';
@@ -11,6 +12,8 @@ import type {
   StatusProposta,
   Usuario,
 } from './types';
+
+const CHAVE_ITENS = 'trocaja:itens';
 
 interface OpcoesMock {
   /** Atraso artificial em ms, para simular rede. Use 0 nos testes. */
@@ -32,6 +35,23 @@ export function criarRepositorioMock({ latencia = 250 }: OpcoesMock = {}): Repos
   const itens: Item[] = structuredClone(itensJson) as Item[];
   const propostas: Proposta[] = structuredClone(propostasJson) as Proposta[];
 
+  const carregarItensSalvos = async (): Promise<Item[]> => {
+    try {
+      const dados = await AsyncStorage.getItem(CHAVE_ITENS);
+      if (!dados) return [];
+      const lista = JSON.parse(dados) as Item[];
+      return Array.isArray(lista) ? lista : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const salvarItens = async (lista: Item[]) => {
+    try {
+      await AsyncStorage.setItem(CHAVE_ITENS, JSON.stringify(lista));
+    } catch {}
+  };
+
   const rede = async <T>(valor: T): Promise<T> => {
     if (latencia > 0) await esperar(latencia);
     return structuredClone(valor);
@@ -51,18 +71,32 @@ export function criarRepositorioMock({ latencia = 250 }: OpcoesMock = {}): Repos
       return rede(novo);
     },
 
-    listarItens: () =>
-      rede([...itens].sort((a, b) => b.criadoEm.localeCompare(a.criadoEm))),
+    async listarItens() {
+      const salvos = await carregarItensSalvos();
+      const todos = [...itens, ...salvos];
+      const mapa = new Map<string, Item>();
+      for (const it of todos) {
+        mapa.set(it.id, it);
+      }
+      const lista = Array.from(mapa.values()).sort((a, b) => b.criadoEm.localeCompare(a.criadoEm));
+      if (latencia > 0) await esperar(latencia);
+      return structuredClone(lista);
+    },
 
     async criarItem(dados: NovoItem) {
       const novo: Item = {
         ...dados,
+        imagem: (dados as Item).imagem ?? null,
         id: gerarId('i'),
         status: 'disponivel',
         criadoEm: new Date().toISOString(),
       };
       itens.push(novo);
-      return rede(novo);
+      const salvos = await carregarItensSalvos();
+      const semDuplicado = salvos.filter((s) => s.id !== novo.id);
+      await salvarItens([...semDuplicado, novo]);
+      if (latencia > 0) await esperar(latencia);
+      return structuredClone(novo);
     },
 
     listarPropostasDoUsuario: (usuarioId) =>

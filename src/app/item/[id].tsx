@@ -1,5 +1,5 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { Avatar } from '@/components/Avatar';
 import { Botao } from '@/components/Botao';
 import { ItemArte } from '@/components/ItemArte';
@@ -38,7 +38,11 @@ export default function DetalheItem() {
     <View style={styles.tela}>
       <Stack.Screen options={{ title: rotuloCategoria(item.categoria) }} />
       <ScrollView contentContainerStyle={styles.conteudo}>
-        <ItemArte item={item} tamanho={96} style={styles.arte} />
+        {item.imagem ? (
+          <Image source={{ uri: item.imagem }} style={styles.imagemDestaque} resizeMode="cover" />
+        ) : (
+          <ItemArte item={item} tamanho={96} style={styles.arte} />
+        )}
 
         <View style={styles.linha}>
           <SeloModalidade modalidade={item.modalidade} />
@@ -98,6 +102,7 @@ const styles = StyleSheet.create({
   tela: { flex: 1, backgroundColor: cores.papel },
   conteudo: { padding: espaco.lg, gap: espaco.md, paddingBottom: espaco.xxl },
   arte: { height: 200, borderWidth: 1.5, borderColor: cores.grafite },
+  imagemDestaque: { width: '100%', height: 220, borderRadius: raio.campo, borderWidth: 1.5, borderColor: cores.grafite, backgroundColor: cores.linha },
   linha: { flexDirection: 'row', alignItems: 'center', gap: espaco.md },
   quadro: {
     borderWidth: 1.5,

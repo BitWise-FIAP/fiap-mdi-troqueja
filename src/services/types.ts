@@ -21,13 +21,15 @@ export interface Item {
   categoria: Categoria;
   condicao: Condicao;
   modalidade: Modalidade;
-  /** O que o dono aceita em troca (texto livre). Vazio em doações. */
+  /** O que o dono aceita em troca (texto livre). Vazio em doa����es. */
   aceitaEmTroca: string;
-  /** Cor de fundo da ilustração do item (hex). */
+  /** Cor de fundo da ilustra��ǜo do item (hex). */
   cor: string;
   campus: string;
   status: StatusItem;
   criadoEm: string;
+  /** URI da imagem escolhida da galeria ou URL opcional. */
+  imagem?: string | null;
 }
 
 export interface Proposta {
