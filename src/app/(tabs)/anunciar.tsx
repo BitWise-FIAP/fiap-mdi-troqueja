@@ -142,8 +142,8 @@ export default function Anunciar() {
         <View style={styles.grupo}>
           <Txt variante="rotulo">Imagem</Txt>
           <TouchableOpacity style={styles.botaoImagem} onPress={escolherImagem}>
-            <Txt variante="corpoForte" cor={cores.marcaTexto}>
-              {imagem ? 'Trocar imagem da galeria' : 'Escolher imagem da galeria'}
+            <Txt variante="corpoForte" cor="#E83D84">
+              {imagem ? 'Trocar imagem da galeria' : 'Escolher imagem do iPhone'}
             </Txt>
           </TouchableOpacity>
           {imagem ? <Image source={{ uri: imagem }} style={styles.preview} resizeMode="cover" /> : null}
@@ -163,17 +163,19 @@ const styles = StyleSheet.create({
   linha: { flexDirection: 'row', gap: espaco.sm },
   linhaQuebra: { flexDirection: 'row', flexWrap: 'wrap', gap: espaco.sm },
   botaoImagem: {
-    borderWidth: 1.5,
-    borderColor: cores.rosaMarcaTexto,
-    backgroundColor: cores.branco,
-    borderRadius: raio.campo,
-    padding: espaco.md,
+    borderWidth: 1,
+    borderColor: '#E83D84',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 14,
     alignItems: 'center',
+    marginBottom: 16,
   },
   preview: {
     width: '100%',
     height: 180,
-    borderRadius: raio.campo,
-    backgroundColor: cores.linha,
+    borderRadius: 12,
+    marginBottom: 16,
+    backgroundColor: '#eee',
   },
 });
