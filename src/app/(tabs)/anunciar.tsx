@@ -121,23 +121,13 @@ export default function Anunciar() {
         </View>
 
         <Campo
-          rotulo="Descrição"
+          rotulo="Descri��ǜo"
           value={form.descricao}
           onChangeText={(t) => definir('descricao', t)}
           erro={erros.descricao}
           multiline
-          placeholder="Estado de conservação, defeitos, onde retirar."
+          placeholder="Estado de conserva��ǜo, defeitos, onde retirar."
         />
-
-        {form.modalidade === 'troca' && (
-          <Campo
-            rotulo="O que você aceita em troca"
-            value={form.aceitaEmTroca}
-            onChangeText={(t) => definir('aceitaEmTroca', t)}
-            erro={erros.aceitaEmTroca}
-            placeholder="Ex.: Livro de Física I"
-          />
-        )}
 
         <View style={styles.grupo}>
           <Txt variante="rotulo">Imagem</Txt>
@@ -148,6 +138,16 @@ export default function Anunciar() {
           </TouchableOpacity>
           {imagem ? <Image source={{ uri: imagem }} style={styles.preview} resizeMode="cover" /> : null}
         </View>
+
+        {form.modalidade === 'troca' && (
+          <Campo
+            rotulo="O que vocǦ aceita em troca"
+            value={form.aceitaEmTroca}
+            onChangeText={(t) => definir('aceitaEmTroca', t)}
+            erro={erros.aceitaEmTroca}
+            placeholder="Ex.: Livro de F��sica I"
+          />
+        )}
 
         {falha && <Txt variante="pequeno" cor={cores.vermelhoErro}>{falha}</Txt>}
         <Botao titulo="Publicar anǧncio" onPress={publicar} carregando={enviando} testID="botao-publicar" />
@@ -169,13 +169,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 14,
     alignItems: 'center',
-    marginBottom: 16,
   },
   preview: {
     width: '100%',
     height: 180,
     borderRadius: 12,
-    marginBottom: 16,
     backgroundColor: '#eee',
   },
 });
