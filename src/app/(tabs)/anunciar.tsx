@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
-import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Botao } from '@/components/Botao';
 import { Campo } from '@/components/Campo';
 import { Chip } from '@/components/Chip';
@@ -131,11 +131,11 @@ export default function Anunciar() {
 
         <View style={styles.grupo}>
           <Txt variante="rotulo">Imagem</Txt>
-          <TouchableOpacity style={styles.botaoImagem} onPress={escolherImagem}>
-            <Txt variante="corpoForte" cor="#E83D84">
-              {imagem ? 'Trocar imagem da galeria' : 'Escolher imagem do iPhone'}
-            </Txt>
-          </TouchableOpacity>
+          <Botao
+            tipo="secundario"
+            titulo={imagem ? 'Trocar imagem da galeria' : 'Escolher imagem do iPhone'}
+            onPress={escolherImagem}
+          />
           {imagem ? <Image source={{ uri: imagem }} style={styles.preview} resizeMode="cover" /> : null}
         </View>
 
@@ -162,14 +162,6 @@ const styles = StyleSheet.create({
   grupo: { gap: espaco.sm },
   linha: { flexDirection: 'row', gap: espaco.sm },
   linhaQuebra: { flexDirection: 'row', flexWrap: 'wrap', gap: espaco.sm },
-  botaoImagem: {
-    borderWidth: 1,
-    borderColor: '#E83D84',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 14,
-    alignItems: 'center',
-  },
   preview: {
     width: '100%',
     height: 180,

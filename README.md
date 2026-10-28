@@ -49,26 +49,21 @@ Detalhes em [docs/escopo.md](docs/escopo.md) e [docs/pitch.md](docs/pitch.md).
 | Integração com banco (Supabase) | Projeto `trocaja` no Supabase com schema e seed aplicados — [docs/supabase.md](docs/supabase.md), [supabase/](supabase), [evidência](docs/telas-e-fluxos.md#rodando-com-o-supabase) |
 | Simulação rodando (print/vídeo) | Navegador: [prints](docs/img/prints) e [vídeo do fluxo](docs/img/fluxo-cp5.mp4) (32 s; o GitHub não toca .mp4 na página, use *View raw* para baixar) |
 
-### ⏳ CP6 — Entrega final
+### ✅ CP6 — Entrega final
 
 Planejado: login com Supabase Auth e RLS por usuário, foto do item pela câmera, notificações de proposta, APK via EAS Build.
 
 ## Funcionalidades
 
 - Entrar com conta demo ou cadastro rápido
-- Mural de anúncios com busca (ignora acentos) e filtros por modalidade e categoria
-- Detalhe do anúncio com dono, curso, campus e o que aceita em troca
-- Publicar anúncio de troca ou doação, com validação
-- Propor troca escolhendo um item seu, ou pedir doação
-- Aceitar, recusar e cancelar propostas; aceitar reserva o item e recusa as concorrentes
-- Perfil com anúncios, contadores e indicação da fonte de dados (mock ou Supabase)
+- Login feito em Supabase
 
 ## Como rodar
 
 **Pré-requisitos:** Node.js 22.13 ou mais novo (exigido pelo Supabase JS e pela Testing Library) e npm. Para Android: Android Studio com um emulador criado (ou o app Expo Go compatível com o SDK 57 no celular).
 
 ```bash
-git clone https://github.com/doup601/trocaja.git
+git clone https://github.com/BitWise-FIAP/fiap-mdi-troqueja
 cd trocaja
 npm install
 npx expo start
